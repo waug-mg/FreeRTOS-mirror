@@ -30,8 +30,8 @@
 #include <task.h>
 
 /* Microsemi includes. */
-#include "core_uart_apb.h"
-#include "core_gpio.h"
+//#include "core_uart_apb.h"
+//#include "core_gpio.h"
 
 /******************************************************************************
  * This project provides two demo applications.  A simple blinky style project,
@@ -119,10 +119,10 @@ static void prvSetupHardware( void )
 // }
 // /*-----------------------------------------------------------*/
 
-// void vSendString( const char * const pcString )
-// {
+void vSendString( const char * const pcString )
+{
 // 	UART_polled_tx_string( &g_uart, pcString );
-// }
+}
 /*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )

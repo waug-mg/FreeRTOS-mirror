@@ -54,7 +54,31 @@
 #    licensing and training services.
 #*/
 
-include ./Makefile.inc
+RISCV_XLEN ?= 32
+RISCV_LIB  ?= elf
+CCPATH =
+ARCH 		= -march=rv32im
+ABI 		= -mabi=ilp32
+
+
+TARGET=$(CCPATH)riscv${RISCV_XLEN}-unknown-${RISCV_LIB}
+
+GCC		= $(TARGET)-gcc
+OBJCOPY	= $(TARGET)-objcopy
+OBJDUMP	= $(TARGET)-objdump
+AR		= $(TARGET)-ar
+RANLIB	= $(TARGET)-ranlib
+
+PROG	= riscv-spike
+CRT0	= bsp/boot.S
+
+FREERTOS_SOURCE_DIR	= ../../Source
+#CUNIT	= ../../../cunit
+
+#-----------------------------------------------------------
+WARNINGS= -Wall -Wextra -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wsign-compare \
+		-Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wunused
+
 
 # Root of RISC-V tools installation. Note that we expect to find the spike
 # simulator header files here under $(RISCV)/include/spike .
@@ -77,31 +101,32 @@ APP_SRC =  \
 	$(APP_SOURCE_DIR)/recmutex.c
 		
 
-PORT_SRC = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISCV/port.c
-PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISCV/portasm.S
+PORT_SRC = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/port.c
+PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/portASM.S
 
-DEMO_SRC = \
-	arch/syscalls.c \
-	arch/ns16550.c \
-	main.c
+DEMO_SRC = main.c \
+	blinky_demo/main_blinky.c \
+	bsp/bsp.c
+#	arch/syscalls.c \
+#	arch/ns16550.c \
+#	main.c
 
 INCLUDES = \
 	-I. \
-	-I$(RISCV)/include/spike \
-	-I./arch \
-	-I./conf \
-	-I./include \
+	-I./bsp \
 	-I$(FREERTOS_SOURCE_DIR)/include \
 	-I../Common/include \
-	-I$(FREERTOS_SOURCE_DIR)/portable/GCC/RISCV
+	-I$(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32
 
-ASFLAGS  += -g $(ARCH) $(ABI)  -Wa,-Ilegacy
+ASFLAGS  += -g $(ARCH) $(ABI)  -Wa,-Ilegacy -I$(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/chip_specific_extensions/RV32I_CLINT_no_extensions -DportasmHANDLE_INTERRUPT=external_interrupt_handler
 
 CFLAGS = \
 	$(WARNINGS) $(INCLUDES) \
 #	-fomit-frame-pointer -fno-strict-aliasing -fno-builtin
 
-CFLAGS += -specs=arch/bare.specs -O0 -g3 $(ARCH) $(ABI) -mcmodel=medany
+#temporary
+CFLAGS += -O0 -g3 $(ARCH) $(ABI) -mcmodel=medany
+#CFLAGS += -specs=arch/bare.specs -O0 -g3 $(ARCH) $(ABI) -mcmodel=medany
 #CFLAGS += -DCONSOLE_UART
 
 ARFLAGS=crsv
@@ -117,7 +142,9 @@ PORT_ASM_OBJ = $(PORT_ASM:.S=.o)
 CRT0_OBJ = $(CRT0:.S=.o)
 OBJS = $(CRT0_OBJ) $(PORT_ASM_OBJ) $(PORT_OBJ) $(RTOS_OBJ) $(DEMO_OBJ) $(APP_OBJ)
 
-LDFLAGS	 = -specs=arch/bare.specs -T arch/link.ld -nostartfiles  #-static -nostdlib 
+# temporary
+LDFLAGS	 = -T link.ld -nostartfiles
+#LDFLAGS	 = -specs=arch/bare.specs -T arch/link.ld -nostartfiles  #-static -nostdlib 
 #LDFLAGS	           += -Wl,-e,_reset
 LIBS	 =  -lc -lgcc
 
@@ -133,7 +160,7 @@ $(info ARFLAGS=$(ARFLAGS))
 
 %.o: %.S
 	@echo "    CC $<"
-	@$(GCC) -c $(CFLAGS) -o $@ $<
+	@$(GCC) $(ASFLAGS) -c $(CFLAGS) -o $@ $<
 
 all: $(PROG).elf
 
