@@ -106,7 +106,8 @@ PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/portASM.S
 
 DEMO_SRC = main.c \
 	blinky_demo/main_blinky.c \
-	bsp/bsp.c
+	bsp/bsp.c \
+	bsp/ns16550.c
 #	arch/syscalls.c \
 #	arch/ns16550.c \
 #	main.c

@@ -32,6 +32,7 @@
 /* Microsemi includes. */
 //#include "core_uart_apb.h"
 //#include "core_gpio.h"
+#include "ns16550.h"
 
 /******************************************************************************
  * This project provides two demo applications.  A simple blinky style project,
@@ -75,7 +76,7 @@ void vApplicationTickHook( void );
 static void prvSetupHardware( void );
 
 /* Send a messaage to the UART initialised in prvSetupHardware. */
-//void vSendString( const char * const pcString );
+void vSendString( const char * const pcString );
 
 /*-----------------------------------------------------------*/
 
@@ -105,6 +106,7 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
+	ns16550_init();
  	//PLIC_init();
  	//UART_init( &g_uart, COREUARTAPB0_BASE_ADDR, BAUD_VALUE_115200, ( DATA_8_BITS | NO_PARITY ) );
 }
@@ -121,6 +123,16 @@ void vToggleLED( void )
 
 void vSendString( const char * const pcString )
 {
+	int idx = 0;
+	while (1) {
+		char c = pcString[idx];
+		ns16550_txchar (c);
+		if (c == '\n') {
+			break;
+		} else {
+			idx++;
+		}
+	}
 // 	UART_polled_tx_string( &g_uart, pcString );
 }
 /*-----------------------------------------------------------*/
