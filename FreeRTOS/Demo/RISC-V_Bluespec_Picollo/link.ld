@@ -85,7 +85,7 @@ MEMORY {
 
 /* Specify the default entry point to the program */
 
-ENTRY(xPortStartFirstTask)
+ENTRY(boot)
 
 /*****************************************************************************
  * Define the sections, and where they are mapped in memory 
