@@ -128,7 +128,7 @@ SECTIONS {
      }	> dmem
 
 	.data : {
-	   . = ALIGN(8);
+	   . = ALIGN(16);
 	   __data_start = .;
 	   *(.data)
 	   *(.data.*)
@@ -137,20 +137,20 @@ SECTIONS {
 	} > dmem
 
     .bss : {
-       . = ALIGN(8);
+       . = ALIGN(16);
        __bss_start = .;
        *(.bss)
        *(.bss.*)
        *(.gnu.linkonce.b.*)
        *(COMMON)
-       . = ALIGN(8);
+       . = ALIGN(16);
        __bss_end = .;
     } > dmem
 
     /* Generate Stack and Heap definitions */
 
     .heap : {
-       . = ALIGN(8);
+       . = ALIGN(16);
        _heap = .;
        _heap_start = .;
        . += _HEAP_SIZE;
@@ -160,9 +160,10 @@ SECTIONS {
     .stack : {
        _stack_end = .;
        . += _STACK_SIZE;
-       . = ALIGN(8);
+       . = ALIGN(16);
        _stack = .;
        __stack = _stack;
+       __freertos_irq_stack_top = .;
     } > dmem
     
     _end = .;

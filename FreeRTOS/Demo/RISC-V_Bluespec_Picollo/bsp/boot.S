@@ -76,9 +76,9 @@ boot:
     csrw mstatus, t6
     j _mstart
 
-	.align 6
-	.section .text,"ax",@progbits
-	.globl _mstart
+#	.align 6
+#	.section .text,"ax",@progbits
+#	.globl _mstart
 
 /* Startup code */
 _mstart:
