@@ -150,6 +150,9 @@ BaseType_t xReturned;
 extern void vSendString( const char * const pcString );
 
 	const char * const helloMessage = "Hello from TX task\r\n";
+	const char * const helloMessage2 = "TX task: task delay\r\n";
+	const char * const helloMessage3 = "TX task: about to send\r\n";
+	const char * const helloMessage4 = "TX task: value sent\r\n";
 	vSendString( helloMessage );
 
 	/* Remove compiler warning about unused parameter. */
@@ -160,15 +163,17 @@ extern void vSendString( const char * const pcString );
 
 	for( ;; )
 	{
+		vSendString( helloMessage2 );
 		/* Place this task in the blocked state until it is time to run again. */
 		vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
-
+		vSendString( helloMessage3 );
 		/* Send to the queue - causing the queue receive task to unblock and
 		toggle the LED.  0 is used as the block time so the sending operation
 		will not block - it shouldn't need to block as the queue should always
 		be empty at this point in the code. */
 		xReturned = xQueueSend( xQueue, &ulValueToSend, 0U );
 		configASSERT( xReturned == pdPASS );
+		vSendString( helloMessage4 );
 	}
 }
 /*-----------------------------------------------------------*/
@@ -183,6 +188,8 @@ extern void vSendString( const char * const pcString );
 extern void vToggleLED( void );
 
 	const char * const helloMessage = "Hello from RX task\r\n";
+	const char * const helloMessage2 = "RX task: waiting for queue\r\n";
+	const char * const helloMessage3 = "RX task: past receive\r\n";
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
 
@@ -193,7 +200,9 @@ extern void vToggleLED( void );
 		/* Wait until something arrives in the queue - this task will block
 		indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
 		FreeRTOSConfig.h. */
+		vSendString( helloMessage2 );
 		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
+		vSendString( helloMessage3 );
 
 		/*  To get here something must have been received from the queue, but
 		is it the expected value?  If it is, toggle the LED. */
