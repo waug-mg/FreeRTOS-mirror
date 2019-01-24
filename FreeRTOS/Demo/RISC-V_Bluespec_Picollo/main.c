@@ -77,6 +77,7 @@ static void prvSetupHardware( void );
 
 /* Send a messaage to the UART initialised in prvSetupHardware. */
 void vSendString( const char * const pcString );
+void vToggleLED( void );
 
 /*-----------------------------------------------------------*/
 

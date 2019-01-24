@@ -147,6 +147,10 @@ static void prvQueueSendTask( void *pvParameters )
 TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 BaseType_t xReturned;
+extern void vSendString( const char * const pcString );
+
+	const char * const helloMessage = "Hello from TX task\r\n";
+	vSendString( helloMessage );
 
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
@@ -178,9 +182,12 @@ const char * const pcFailMessage = "Unexpected value received\r\n";
 extern void vSendString( const char * const pcString );
 extern void vToggleLED( void );
 
+	const char * const helloMessage = "Hello from RX task\r\n";
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
 
+	vSendString( helloMessage );
+	
 	for( ;; )
 	{
 		/* Wait until something arrives in the queue - this task will block
