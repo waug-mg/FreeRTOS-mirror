@@ -193,7 +193,7 @@ extern void vToggleLED( void );
 		if( ulReceivedValue == ulExpectedValue )
 		{
 			//vSendString( pcPassMessage );
-			//vToggleLED();
+			vToggleLED();
 			ulReceivedValue = 0U;
 		}
 		else

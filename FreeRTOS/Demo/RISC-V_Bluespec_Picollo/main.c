@@ -110,13 +110,13 @@ static void prvSetupHardware( void )
 }
 /*-----------------------------------------------------------*/
 
-// void vToggleLED( void )
-// {
-// static uint32_t ulLEDState = 0;
+void vToggleLED( void )
+{
+	static uint32_t ulLEDState = 0;
 
 // 	GPIO_set_outputs( &g_gpio_out, ulLEDState );
-// 	ulLEDState = !ulLEDState;
-// }
+	ulLEDState = !ulLEDState;
+}
 // /*-----------------------------------------------------------*/
 
 void vSendString( const char * const pcString )
