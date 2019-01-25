@@ -1,65 +1,8 @@
-#/*
-#    FreeRTOS V8.2.3 - Copyright (C) 2015 Real Time Engineers Ltd.
-#	
-#
-#    ***************************************************************************
-#     *                                                                       *
-#     *    FreeRTOS tutorial books are available in pdf and paperback.        *
-#     *    Complete, revised, and edited pdf reference manuals are also       *
-#     *    available.                                                         *
-#     *                                                                       *
-#     *    Purchasing FreeRTOS documentation will not only help you, by       *
-#     *    ensuring you get running as quickly as possible and with an        *
-#     *    in-depth knowledge of how to use FreeRTOS, it will also help       *
-#     *    the FreeRTOS project to continue with its mission of providing     *
-#     *    professional grade, cross platform, de facto standard solutions    *
-#     *    for microcontrollers - completely free of charge!                  *
-#     *                                                                       *
-#     *    >>> See http://www.FreeRTOS.org/Documentation for details. <<<     *
-#     *                                                                       *
-#     *    Thank you for using FreeRTOS, and thank you for your support!      *
-#     *                                                                       *
-#    ***************************************************************************
-#
-#
-#    This file is part of the FreeRTOS distribution and was contributed
-#    to the project by Technolution B.V. (www.technolution.nl,
-#    freertos-riscv@technolution.eu) under the terms of the FreeRTOS
-#    contributors license.
-#
-#    FreeRTOS is free software; you can redistribute it and/or modify it under
-#    the terms of the GNU General Public License (version 2) as published by the
-#    Free Software Foundation AND MODIFIED BY the FreeRTOS exception.
-#    >>>NOTE<<< The modification to the GPL is included to allow you to
-#    distribute a combined work that includes FreeRTOS without being obliged to
-#    provide the source code for proprietary components outside of the FreeRTOS
-#    kernel.  FreeRTOS is distributed in the hope that it will be useful, but
-#    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-#    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-#    more details. You should have received a copy of the GNU General Public
-#    License and the FreeRTOS license exception along with FreeRTOS; if not it
-#    can be viewed here: http://www.freertos.org/a00114.html and also obtained
-#    by writing to Richard Barry, contact details for whom are available on the
-#    FreeRTOS WEB site.
-#
-#    1 tab == 4 spaces!
-#
-#    http://www.FreeRTOS.org - Documentation, latest information, license and
-#    contact details.
-#
-#    http://www.SafeRTOS.com - A version that is certified for use in safety
-#    critical systems.
-#
-#    http://www.OpenRTOS.com - Commercial support, development, porting,
-#    licensing and training services.
-#*/
-
 RISCV_XLEN ?= 32
 RISCV_LIB  ?= elf
 CCPATH =
 ARCH 		= -march=rv32im
 ABI 		= -mabi=ilp32
-
 
 TARGET=$(CCPATH)riscv${RISCV_XLEN}-unknown-${RISCV_LIB}
 
@@ -73,15 +16,12 @@ PROG	= riscv-spike
 CRT0	= bsp/boot.S
 
 FREERTOS_SOURCE_DIR	= ../../Source
-#CUNIT	= ../../../cunit
 
-#-----------------------------------------------------------
 WARNINGS= -Wall -Wextra -Wshadow -Wpointer-arith -Wbad-function-cast -Wcast-align -Wsign-compare \
 		-Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wunused
 
 
-# Root of RISC-V tools installation. Note that we expect to find the spike
-# simulator header files here under $(RISCV)/include/spike .
+# Root of RISC-V tools installation
 RISCV ?= /opt/riscv
 
 FREERTOS_SRC = \
@@ -105,12 +45,10 @@ PORT_SRC = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/port.c
 PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/portASM.S
 
 DEMO_SRC = main.c \
-	blinky_demo/main_blinky.c \
+	demo/main_blinky.c \
 	bsp/bsp.c \
-	bsp/ns16550.c
-#	arch/syscalls.c \
-#	arch/ns16550.c \
-#	main.c
+	bsp/ns16550.c \
+	bsp/syscalls.c
 
 INCLUDES = \
 	-I. \
@@ -121,14 +59,8 @@ INCLUDES = \
 
 ASFLAGS  += -g $(ARCH) $(ABI)  -Wa,-Ilegacy -I$(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/chip_specific_extensions/RV32I_CLINT_no_extensions -DportasmHANDLE_INTERRUPT=external_interrupt_handler
 
-CFLAGS = \
-	$(WARNINGS) $(INCLUDES) \
-#	-fomit-frame-pointer -fno-strict-aliasing -fno-builtin
-
-#temporary
+CFLAGS = $(WARNINGS) $(INCLUDES)
 CFLAGS += -O0 -g3 $(ARCH) $(ABI) -mcmodel=medany
-#CFLAGS += -specs=arch/bare.specs -O0 -g3 $(ARCH) $(ABI) -mcmodel=medany
-#CFLAGS += -DCONSOLE_UART
 
 ARFLAGS=crsv
 
@@ -143,10 +75,7 @@ PORT_ASM_OBJ = $(PORT_ASM:.S=.o)
 CRT0_OBJ = $(CRT0:.S=.o)
 OBJS = $(CRT0_OBJ) $(PORT_ASM_OBJ) $(PORT_OBJ) $(RTOS_OBJ) $(DEMO_OBJ) $(APP_OBJ)
 
-# temporary
-LDFLAGS	 = -T link.ld -nostartfiles
-#LDFLAGS	 = -specs=arch/bare.specs -T arch/link.ld -nostartfiles  #-static -nostdlib 
-#LDFLAGS	           += -Wl,-e,_reset
+LDFLAGS	 = -T link.ld -nostartfiles -nostdlib 
 LIBS	 =  -lc -lgcc
 
 $(info ASFLAGS=$(ASFLAGS))

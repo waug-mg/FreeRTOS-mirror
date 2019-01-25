@@ -70,17 +70,13 @@
     1 tab == 4 spaces!
 */
 
+/* Startup code */
 .globl boot
 boot:
     li t6, 0x1800
     csrw mstatus, t6
     j _mstart
 
-#	.align 6
-#	.section .text,"ax",@progbits
-#	.globl _mstart
-
-/* Startup code */
 _mstart:
     li	x1, 0
     li	x2, 0

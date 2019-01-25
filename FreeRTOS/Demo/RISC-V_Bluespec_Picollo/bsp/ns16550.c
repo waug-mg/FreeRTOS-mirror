@@ -2,9 +2,7 @@
 #include <stdint.h>
 #include "ns16550.h"
 
-
 #define DEFAULT_BAUDRATE  (9600)
-
 
 struct __attribute__ ((aligned (8))) ns16550_pio
 {
@@ -46,7 +44,6 @@ struct __attribute__ ((aligned (8))) ns16550_pio
 
 static struct ns16550_pio * pio = (void*)NS16550_BASE;
 
-//#ifdef CONSOLE_UART
 __attribute__ ((constructor))
 int ns16550_init(void)
 {
@@ -66,8 +63,6 @@ int ns16550_init(void)
 
   return 0;
 }
-//#endif
-
 
 int ns16550_rxready(void)
 {

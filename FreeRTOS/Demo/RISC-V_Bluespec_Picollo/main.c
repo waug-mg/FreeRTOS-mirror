@@ -75,8 +75,6 @@ void vApplicationTickHook( void );
 /* Prepare haredware to run the demo. */
 static void prvSetupHardware( void );
 
-/* Send a messaage to the UART initialised in prvSetupHardware. */
-void vSendString( const char * const pcString );
 void vToggleLED( void );
 
 /*-----------------------------------------------------------*/
@@ -121,22 +119,6 @@ void vToggleLED( void )
 	ulLEDState = !ulLEDState;
 }
 // /*-----------------------------------------------------------*/
-
-void vSendString( const char * const pcString )
-{
-	int idx = 0;
-	while (1) {
-		char c = pcString[idx];
-		ns16550_txchar (c);
-		if (c == '\n') {
-			break;
-		} else {
-			idx++;
-		}
-	}
-// 	UART_polled_tx_string( &g_uart, pcString );
-}
-/*-----------------------------------------------------------*/
 
 void vApplicationMallocFailedHook( void )
 {
