@@ -4,6 +4,8 @@ CCPATH =
 ARCH 		= -march=rv32im
 ABI 		= -mabi=ilp32
 
+SIMPLE_DEMO ?= 1
+
 TARGET=$(CCPATH)riscv${RISCV_XLEN}-unknown-${RISCV_LIB}
 
 GCC		= $(TARGET)-gcc
@@ -45,10 +47,19 @@ PORT_SRC = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/port.c
 PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/portASM.S
 
 DEMO_SRC = main.c \
-	demo/main_blinky.c \
 	bsp/bsp.c \
 	bsp/ns16550.c \
 	bsp/syscalls.c
+
+ifeq ($(SIMPLE_DEMO),1)
+$(info SIMPLE DEMO)
+	# compiling blinku demo only
+	DEMO_SRC += demo/main_blinky.c
+else
+$(info FULL DEMO)
+	# compiling full demo
+	DEMO_SRC += demo/main_full.c
+endif
 
 INCLUDES = \
 	-I. \
@@ -59,7 +70,7 @@ INCLUDES = \
 
 ASFLAGS  += -g $(ARCH) $(ABI)  -Wa,-Ilegacy -I$(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/chip_specific_extensions/RV32I_CLINT_no_extensions -DportasmHANDLE_INTERRUPT=external_interrupt_handler
 
-CFLAGS = $(WARNINGS) $(INCLUDES)
+CFLAGS = $(WARNINGS) $(INCLUDES) -DmainCREATE_SIMPLE_BLINKY_DEMO_ONLY=$(SIMPLE_DEMO)
 CFLAGS += -O0 -g3 $(ARCH) $(ABI) -mcmodel=medany
 
 ARFLAGS=crsv
