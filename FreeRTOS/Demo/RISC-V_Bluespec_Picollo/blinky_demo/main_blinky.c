@@ -192,29 +192,65 @@ extern void vToggleLED( void );
 	const char * const helloMessage3 = "RX task: past receive\r\n";
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
+	int cnt = 0;
 
-	vSendString( helloMessage );
+	vSendString(helloMessage );
 	
+
+char *ptr = "Hello world!";
+	char *np = 0;
+	int i = 5;
+	unsigned int bs = sizeof(int)*8;
+	int mi;
+	char buf[80];
+
+	mi = (1 << (bs-1)) + 1;
+	my_printf("%s\n", ptr);
+	my_printf("my_printf test\n");
+	my_printf("%s is null pointer\n", np);
+	my_printf("%d = 5\n", i);
+	my_printf("%d = - max int\n", mi);
+	my_printf("char %c = 'a'\n", 'a');
+	my_printf("hex %x = ff\n", 0xff);
+	my_printf("hex %02x = 00\n", 0);
+	my_printf("signed %d = unsigned %u = hex %x\n", -3, -3, -3);
+	my_printf("%d %s(s)%", 0, "message");
+	my_printf("\n");
+	my_printf("%d %s(s) with %%\n", 0, "message");
+	sprintf(buf, "justif: \"%-10s\"\n", "left"); my_printf("%s", buf);
+	sprintf(buf, "justif: \"%10s\"\n", "right"); my_printf("%s", buf);
+	sprintf(buf, " 3: %04d zero padded\n", 3); my_printf("%s", buf);
+	sprintf(buf, " 3: %-4d left justif.\n", 3); my_printf("%s", buf);
+	sprintf(buf, " 3: %4d right justif.\n", 3); my_printf("%s", buf);
+	sprintf(buf, "-3: %04d zero padded\n", -3); my_printf("%s", buf);
+	sprintf(buf, "-3: %-4d left justif.\n", -3); my_printf("%s", buf);
+	sprintf(buf, "-3: %4d right justif.\n", -3); my_printf("%s", buf);
+
 	for( ;; )
 	{
 		/* Wait until something arrives in the queue - this task will block
 		indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
 		FreeRTOSConfig.h. */
 		vSendString( helloMessage2 );
+		cnt++;
+		my_printf("RX alive%u\r\n",cnt);
+
 		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
-		vSendString( helloMessage3 );
+		//vSendString( helloMessage3 );
 
 		/*  To get here something must have been received from the queue, but
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == ulExpectedValue )
 		{
-			vSendString( pcPassMessage );
+			//vSendString( pcPassMessage );
+			my_printf("Blink\r\n");
 			vToggleLED();
 			ulReceivedValue = 0U;
 		}
 		else
 		{
-			vSendString( pcFailMessage );
+			//vSendString( pcFailMessage );
+			my_printf("Unexpected value received\r\n");
 		}
 	}
 }

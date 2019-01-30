@@ -107,7 +107,9 @@ PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/portASM.S
 DEMO_SRC = main.c \
 	blinky_demo/main_blinky.c \
 	bsp/bsp.c \
-	bsp/ns16550.c
+	bsp/ns16550.c \
+	printf-stdarg.c
+#	bsp/syscalls.c
 #	arch/syscalls.c \
 #	arch/ns16550.c \
 #	main.c
@@ -144,8 +146,8 @@ CRT0_OBJ = $(CRT0:.S=.o)
 OBJS = $(CRT0_OBJ) $(PORT_ASM_OBJ) $(PORT_OBJ) $(RTOS_OBJ) $(DEMO_OBJ) $(APP_OBJ)
 
 # temporary
-LDFLAGS	 = -T link.ld -nostartfiles
-#LDFLAGS	 = -specs=arch/bare.specs -T arch/link.ld -nostartfiles  #-static -nostdlib 
+LDFLAGS	 = -T link.ld -nostartfiles -nostdlib
+#LDFLAGS	 = -specs=bare.specs -T link.ld -nostartfiles  #-static -nostdlib 
 #LDFLAGS	           += -Wl,-e,_reset
 LIBS	 =  -lc -lgcc
 
