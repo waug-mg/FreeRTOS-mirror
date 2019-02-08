@@ -83,7 +83,7 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 //#define configISR_STACK_SIZE_WORDS      500 // NOTE: if using configISR_STACK_SIZE_WORDS the stack alignment assert doesn't pass
-#define configCLINT_BASE_ADDRESS		0x2000000
+#define configCLINT_BASE_ADDRESS		0x1000000
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
