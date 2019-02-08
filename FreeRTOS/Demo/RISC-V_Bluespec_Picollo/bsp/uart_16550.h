@@ -1,10 +1,11 @@
 
-#ifndef __NS16550_H__
-#define __NS16550_H__
+#ifndef __UART_16550_H__
+#define __UART_16550_H__
 
+#define UART_BASE (0x62300000ULL)
+#define UART_CLOCK_RATE  (83000000ULL) // 83MHz
+#define DEFAULT_BAUDRATE  (9600)
 
-#define NS16550_BASE (0xC0000000ULL)
-#define NS16550_CLOCK_RATE  (4000000ULL) // 4MHz
 
 enum __attribute__ ((__packed__)) ier_t
 {
@@ -92,10 +93,10 @@ enum __attribute__ ((__packed__)) msr_t
   MSR_DCD = 0x80,
 };
 
-int ns16550_rxready(void);
-int ns16550_rxchar(void);
-int ns16550_txchar(int c);
-void ns16550_flush(void);
-int ns16550_init(void);
+int uart_rxready(void);
+int uart_rxchar(void);
+int uart_txchar(int c);
+void uart_flush(void);
+int uart_init(void);
 
 #endif

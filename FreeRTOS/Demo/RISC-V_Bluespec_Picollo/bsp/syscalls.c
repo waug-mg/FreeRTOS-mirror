@@ -2,7 +2,7 @@
 #include <sys/stat.h>
 #include <sys/times.h>
 #include <sys/time.h>
-#include "ns16550.h"
+#include "uart_16550.h"
 
 void* _sbrk (int nbytes);
 int _write(int file, char *ptr, int len);
@@ -25,7 +25,7 @@ int _write(int file, char *ptr, int len) {
   int todo;
   (void)file;
   for (todo = 0; todo < len; todo++) {
-    ns16550_txchar (*ptr++);
+    uart_txchar (*ptr++);
   }
   return len;
 }

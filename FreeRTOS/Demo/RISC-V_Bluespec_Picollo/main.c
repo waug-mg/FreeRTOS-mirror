@@ -32,7 +32,7 @@
 /* Microsemi includes. */
 //#include "core_uart_apb.h"
 //#include "core_gpio.h"
-#include "ns16550.h"
+#include "uart_16550.h"
 
 /******************************************************************************
  * This project provides two demo applications.  A simple blinky style project,
@@ -104,7 +104,7 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
-	ns16550_init();
+	uart_init();
  	//PLIC_init();
  	//UART_init( &g_uart, COREUARTAPB0_BASE_ADDR, BAUD_VALUE_115200, ( DATA_8_BITS | NO_PARITY ) );
 }

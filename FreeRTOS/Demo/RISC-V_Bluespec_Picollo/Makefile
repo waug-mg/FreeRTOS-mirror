@@ -48,7 +48,7 @@ PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/portASM.S
 
 DEMO_SRC = main.c \
 	bsp/bsp.c \
-	bsp/ns16550.c \
+	bsp/uart_16550.c \
 	bsp/syscalls.c
 
 ifeq ($(SIMPLE_DEMO),1)
