@@ -71,13 +71,14 @@
 #include "semphr.h"
 
 /* Common demo includes. */
+#include "AbortDelay.h"
 #include "blocktim.h"
 #include "countsem.h"
 #include "recmutex.h"
 /* The period after which the check timer will expire provided no errors have
 been reported by any of the standard demo tasks.  ms are converted to the
 equivalent in ticks using the portTICK_PERIOD_MS constant. */
-#define mainCHECK_TIMER_PERIOD_MS			( 3000UL / portTICK_PERIOD_MS )
+#define mainCHECK_TIMER_PERIOD_MS			pdMS_TO_TICKS( 3000 )
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
@@ -97,9 +98,10 @@ TimerHandle_t xCheckTimer = NULL;
 
 	/* Create the standard demo tasks, including the interrupt nesting test
 	tasks. */
-	vCreateBlockTimeTasks();
-	vStartCountingSemaphoreTasks();
-	vStartRecursiveMutexTasks();
+	vCreateAbortDelayTasks();
+	//vCreateBlockTimeTasks();
+	//vStartCountingSemaphoreTasks();
+	//vStartRecursiveMutexTasks();
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
@@ -142,6 +144,13 @@ unsigned long ulErrorFound = pdFALSE;
 	/* Check all the demo and test tasks to ensure that they are all still
 	running, and that none have detected an error. */
 
+	if(xAreAbortDelayTestTasksStillRunning() != pdPASS)
+	{
+		printf("Error in abort delay test tasks \r\n");
+		ulErrorFound |= ( 0x01UL << 1UL );
+	}
+
+	/*
 	if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
 	{
 		printf("Error in block time test tasks \r\n");
@@ -159,6 +168,7 @@ unsigned long ulErrorFound = pdFALSE;
 		printf("Error in recursive mutex tasks \r\n");
 		ulErrorFound |= ( 0x01UL << 3UL );
 	}
+	*/
 
 	if( ulErrorFound != pdFALSE )
 	{
