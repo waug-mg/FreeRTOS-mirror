@@ -83,14 +83,14 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 //#define configISR_STACK_SIZE_WORDS      500 // NOTE: if using configISR_STACK_SIZE_WORDS the stack alignment assert doesn't pass
-#define configCLINT_BASE_ADDRESS		0x1000000
+#define configCLINT_BASE_ADDRESS		0x10000000
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
 #define configCPU_CLOCK_HZ				( ( uint32_t ) ( 10000000 ) )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 5 )
-#define configMINIMAL_STACK_SIZE		( ( uint32_t ) 170 ) /* Can be as low as 60 but some of the demo tasks that use this constant require it to be higher. */
+#define configMINIMAL_STACK_SIZE		( ( uint32_t ) 512 ) /* Can be as low as 60 but some of the demo tasks that use this constant require it to be higher. */
 #define configTOTAL_HEAP_SIZE			( ( size_t ) ( 280 * 1024 ) )
 #define configMAX_TASK_NAME_LEN			( 16 )
 #define configUSE_TRACE_FACILITY		0
