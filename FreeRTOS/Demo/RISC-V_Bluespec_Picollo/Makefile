@@ -4,7 +4,7 @@ CCPATH =
 ARCH 		= -march=rv32im
 ABI 		= -mabi=ilp32
 
-DEMO_TYPE ?= 0
+DEMO_TYPE ?= 1
 
 TARGET=$(CCPATH)riscv${RISCV_XLEN}-unknown-${RISCV_LIB}
 
@@ -52,12 +52,10 @@ DEMO_SRC = main.c \
 	bsp/syscalls.c
 
 ifeq ($(DEMO_TYPE),1)
-$(info DEMO: $(DEMO_TYPE))
 # compiling blinku demo only
 DEMO_SRC += demo/main_blinky.c
 else
 ifeq ($(DEMO_TYPE),2)
-$(info DEMO: $(DEMO_TYPE))
 # compiling full demo
 DEMO_SRC += demo/main_full.c
 else
