@@ -4,7 +4,7 @@ CCPATH =
 ARCH 		= -march=rv32im
 ABI 		= -mabi=ilp32
 
-SIMPLE_DEMO ?= 1
+DEMO_TYPE ?= 0
 
 TARGET=$(CCPATH)riscv${RISCV_XLEN}-unknown-${RISCV_LIB}
 
@@ -14,7 +14,7 @@ OBJDUMP	= $(TARGET)-objdump
 AR		= $(TARGET)-ar
 RANLIB	= $(TARGET)-ranlib
 
-PROG	= riscv-spike
+PROG	= main
 CRT0	= bsp/boot.S
 
 FREERTOS_SOURCE_DIR	= ../../Source
@@ -51,14 +51,18 @@ DEMO_SRC = main.c \
 	bsp/uart_16550.c \
 	bsp/syscalls.c
 
-ifeq ($(SIMPLE_DEMO),1)
-$(info SIMPLE DEMO)
-	# compiling blinku demo only
-	DEMO_SRC += demo/main_blinky.c
+ifeq ($(DEMO_TYPE),1)
+$(info DEMO: $(DEMO_TYPE))
+# compiling blinku demo only
+DEMO_SRC += demo/main_blinky.c
 else
-$(info FULL DEMO)
-	# compiling full demo
-	DEMO_SRC += demo/main_full.c
+ifeq ($(DEMO_TYPE),2)
+$(info DEMO: $(DEMO_TYPE))
+# compiling full demo
+DEMO_SRC += demo/main_full.c
+else
+$(info unknown demo: $(DEMO_TYPE))
+endif
 endif
 
 INCLUDES = \
@@ -70,7 +74,7 @@ INCLUDES = \
 
 ASFLAGS  += -g $(ARCH) $(ABI)  -Wa,-Ilegacy -I$(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/chip_specific_extensions/RV32I_CLINT_no_extensions -DportasmHANDLE_INTERRUPT=external_interrupt_handler
 
-CFLAGS = $(WARNINGS) $(INCLUDES) -DmainCREATE_SIMPLE_BLINKY_DEMO_ONLY=$(SIMPLE_DEMO)
+CFLAGS = $(WARNINGS) $(INCLUDES) -DmainDEMO_TYPE=$(DEMO_TYPE)
 CFLAGS += -O0 -g3 $(ARCH) $(ABI) -mcmodel=medany
 
 ARFLAGS=crsv
@@ -116,12 +120,3 @@ clean :
 	@rm -f $(PROG).elf 
 	@rm -f $(PROG).map
 	@rm -f $(PROG).asm
-
-force_true:
-	@true
-
-#-------------------------------------------------------------
-sim: all
-	spike $(PROG).elf
-
-

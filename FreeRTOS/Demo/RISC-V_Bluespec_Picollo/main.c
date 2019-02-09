@@ -58,10 +58,14 @@ or 0 to run the more comprehensive test and demo application. */
  * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
  * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
  */
-#if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1
+#if mainDEMO_TYPE == 1
+	#pragma message "Demo type 1"
 	extern void main_blinky( void );
-#else
+#elif mainDEMO_TYPE == 2
+	#pragma message "Demo type 2"
 	extern void main_full( void );
+#else
+	#error "Unsupported demo type"
 #endif /* #if mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 */
 
 /* Prototypes for the standard FreeRTOS callback/hook functions implemented
@@ -90,11 +94,11 @@ int main( void )
 
 	/* The mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting is described at the top
 	of this file. */
-	#if( mainCREATE_SIMPLE_BLINKY_DEMO_ONLY == 1 )
+	#if mainDEMO_TYPE == 1
 	{
 		main_blinky();
 	}
-	#else
+	#elif mainDEMO_TYPE == 2
 	{
 		main_full();
 	}
