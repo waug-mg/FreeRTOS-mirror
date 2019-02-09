@@ -40,8 +40,11 @@ APP_SOURCE_DIR	= ../Common/Minimal
 
 APP_SRC =  \
 	$(APP_SOURCE_DIR)/AbortDelay.c \
+	$(APP_SOURCE_DIR)/BlockQ.c \
+	$(APP_SOURCE_DIR)/dynamic.c \
 	$(APP_SOURCE_DIR)/blocktim.c \
 	$(APP_SOURCE_DIR)/countsem.c \
+	$(APP_SOURCE_DIR)/integer.c \
 	$(APP_SOURCE_DIR)/recmutex.c
 		
 
@@ -90,7 +93,7 @@ PORT_ASM_OBJ = $(PORT_ASM:.S=.o)
 CRT0_OBJ = $(CRT0:.S=.o)
 OBJS = $(CRT0_OBJ) $(PORT_ASM_OBJ) $(PORT_OBJ) $(RTOS_OBJ) $(DEMO_OBJ) $(APP_OBJ)
 
-LDFLAGS	 = -T link.ld -nostartfiles -nostdlib 
+LDFLAGS	 = -T link.ld -nostartfiles -nostdlib -defsym=_STACK_SIZE=2K
 LIBS	 =  -lc -lgcc
 
 $(info ASFLAGS=$(ASFLAGS))

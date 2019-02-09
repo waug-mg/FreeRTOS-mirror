@@ -72,9 +72,28 @@
 
 /* Common demo includes. */
 #include "AbortDelay.h"
+#include "BlockQ.h"
 #include "blocktim.h"
+// TODO: a separate test: make a demo for comtest_strings, comtest, comtest2 for UART
 #include "countsem.h"
+// TODO: a separate test: co-routines test for crhook, crflash for coroutines
+// TODO: a separete test: death for suicidal tasks, needs to be the last task spawned
+#include "dynamic.h"
+// TODO: a separate test: EventGroupsDemo
+// TODO: a sepate test: FileIO for file system
+// TODO: a separe test: flash_timer, maybe flash etc for flashing GPIO
+// TODO: "flop.h" for floating point and double
+// TODO: a separate test for GenQTest
+// TODO: a separate test for IntQueue
+// TODO: a separate test for IntSemTest
+// TODO: MessageBufferAMP is for multicore machines
+// TODO: a separate test "MessageBufferDemo.h"
+// TODO: add PollQ + rest of Minimal
+// TODO: tests from "full"
+#include "integer.h"
 #include "recmutex.h"
+
+
 /* The period after which the check timer will expire provided no errors have
 been reported by any of the standard demo tasks.  ms are converted to the
 equivalent in ticks using the portTICK_PERIOD_MS constant. */
@@ -82,6 +101,10 @@ equivalent in ticks using the portTICK_PERIOD_MS constant. */
 
 /* A block time of zero simply means "don't block". */
 #define mainDONT_BLOCK						( 0UL )
+
+#define mainBLOCK_Q_PRIORITY		( tskIDLE_PRIORITY + 2 )
+//#define mainFLOP_TASK_PRIORITY		( tskIDLE_PRIORITY )
+#define mainINTEGER_TASK_PRIORITY		( tskIDLE_PRIORITY )
 
 void main_full( void );
 
@@ -99,9 +122,12 @@ TimerHandle_t xCheckTimer = NULL;
 	/* Create the standard demo tasks, including the interrupt nesting test
 	tasks. */
 	vCreateAbortDelayTasks();
-	//vCreateBlockTimeTasks();
-	//vStartCountingSemaphoreTasks();
-	//vStartRecursiveMutexTasks();
+	vStartBlockingQueueTasks(mainBLOCK_Q_PRIORITY);
+	vCreateBlockTimeTasks();
+	vStartCountingSemaphoreTasks();
+	vStartDynamicPriorityTasks();
+	vStartIntegerMathTasks(mainINTEGER_TASK_PRIORITY);
+	vStartRecursiveMutexTasks();
 
 	/* Create the software timer that performs the 'check' functionality,
 	as described at the top of this file. */
@@ -146,29 +172,45 @@ unsigned long ulErrorFound = pdFALSE;
 
 	if(xAreAbortDelayTestTasksStillRunning() != pdPASS)
 	{
-		printf("Error in abort delay test tasks \r\n");
+		printf("Error in xAreAbortDelayTestTasksStillRunning()\r\n");
 		ulErrorFound |= ( 0x01UL << 1UL );
 	}
 
-	/*
+	if(xAreBlockingQueuesStillRunning() != pdPASS)
+	{
+		printf("Error in xAreBlockingQueuesStillRunning()\r\n");
+		ulErrorFound |= ( 0x01UL << 2UL );
+	}
+
 	if( xAreBlockTimeTestTasksStillRunning() != pdPASS )
 	{
-		printf("Error in block time test tasks \r\n");
-		ulErrorFound |= ( 0x01UL << 1UL );
+		printf("Error in xAreBlockTimeTestTasksStillRunning() \r\n");
+		ulErrorFound |= ( 0x01UL << 3UL );
 	}
 
 	if( xAreCountingSemaphoreTasksStillRunning() != pdPASS )
 	{
-		printf("Error in counting semaphore tasks \r\n");
-		ulErrorFound |= ( 0x01UL << 2UL );
+		printf("Error in xAreCountingSemaphoreTasksStillRunning() \r\n");
+		ulErrorFound |= ( 0x01UL << 4UL );
+	}
+
+	if( xAreDynamicPriorityTasksStillRunning() != pdPASS )
+	{
+		printf("Error in xAreDynamicPriorityTasksStillRunning()\r\n");
+		ulErrorFound |= ( 0x01UL << 5UL );
+	}
+
+	if( xAreIntegerMathsTaskStillRunning() != pdPASS )
+	{
+		printf("Error in xAreIntegerMathsTaskStillRunning() \r\n");
+		ulErrorFound |= ( 0x01UL << 6UL );
 	}
 
 	if( xAreRecursiveMutexTasksStillRunning() != pdPASS )
 	{
-		printf("Error in recursive mutex tasks \r\n");
-		ulErrorFound |= ( 0x01UL << 3UL );
+		printf("Error in xAreRecursiveMutexTasksStillRunning() \r\n");
+		ulErrorFound |= ( 0x01UL << 7UL );
 	}
-	*/
 
 	if( ulErrorFound != pdFALSE )
 	{
