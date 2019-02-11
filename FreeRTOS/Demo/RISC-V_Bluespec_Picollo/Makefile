@@ -57,14 +57,19 @@ DEMO_SRC = main.c \
 	bsp/syscalls.c
 
 ifeq ($(DEMO_TYPE),1)
-# compiling blinku demo only
+# compiling blinky demo
 DEMO_SRC += demo/main_blinky.c
 else
 ifeq ($(DEMO_TYPE),2)
+# compiling minimal demo
+DEMO_SRC += demo/main_minimal.c
+else
+ifeq ($(DEMO_TYPE),3)
 # compiling full demo
 DEMO_SRC += demo/main_full.c
 else
 $(info unknown demo: $(DEMO_TYPE))
+endif
 endif
 endif
 

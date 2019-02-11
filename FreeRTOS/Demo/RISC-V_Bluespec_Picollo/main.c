@@ -29,40 +29,21 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-/* Microsemi includes. */
-//#include "core_uart_apb.h"
-//#include "core_gpio.h"
+/* Bsp includes. */
 #include "uart_16550.h"
 
 /******************************************************************************
- * This project provides two demo applications.  A simple blinky style project,
- * and a more comprehensive test and demo application.  The
- * mainCREATE_SIMPLE_BLINKY_DEMO_ONLY setting (defined in this file) is used to
- * select between the two.  The simply blinky demo is implemented and described
- * in main_blinky.c.  The more comprehensive test and demo application is
- * implemented and described in main_full.c.
- *
- * This file implements the code that is not demo specific, including the
- * hardware setup and standard FreeRTOS hook functions.
- *
- * ENSURE TO READ THE DOCUMENTATION PAGE FOR THIS PORT AND DEMO APPLICATION ON
- * THE http://www.FreeRTOS.org WEB SITE FOR FULL INFORMATION ON USING THIS DEMO
- * APPLICATION, AND ITS ASSOCIATE FreeRTOS ARCHITECTURE PORT!
- *
- */
-
-/* Set mainCREATE_SIMPLE_BLINKY_DEMO_ONLY to one to run the simple blinky demo,
-or 0 to run the more comprehensive test and demo application. */
-
-/*
- * main_blinky() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 1.
- * main_full() is used when mainCREATE_SIMPLE_BLINKY_DEMO_ONLY is set to 0.
+ * This project provides test applications for Galois P1 SSITH processor.
+ * TODO: update docs
  */
 #if mainDEMO_TYPE == 1
-	#pragma message "Demo type 1"
+	#pragma message "Demo type 1: Basic Blinky"
 	extern void main_blinky( void );
 #elif mainDEMO_TYPE == 2
-	#pragma message "Demo type 2"
+	#pragma message "Demo type 2: Minimal"
+	extern void main_minimal( void );
+#elif mainDEMO_TYPE == 3
+	#pragma message "Demo type 3: Full"
 	extern void main_full( void );
 #else
 	#error "Unsupported demo type"
@@ -100,6 +81,10 @@ int main( void )
 	}
 	#elif mainDEMO_TYPE == 2
 	{
+		main_minimal();
+	}
+	#elif mainDEMO_TYPE == 3
+	{
 		main_full();
 	}
 	#endif
@@ -108,12 +93,13 @@ int main( void )
 
 static void prvSetupHardware( void )
 {
-	uart_init();
+	UART_init();
  	//PLIC_init();
  	//UART_init( &g_uart, COREUARTAPB0_BASE_ADDR, BAUD_VALUE_115200, ( DATA_8_BITS | NO_PARITY ) );
 }
 /*-----------------------------------------------------------*/
 
+// TODO: toggle a real LED at some point
 void vToggleLED( void )
 {
 	static uint32_t ulLEDState = 0;

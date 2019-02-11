@@ -148,7 +148,7 @@ TickType_t xNextWakeTime;
 const unsigned long ulValueToSend = 100UL;
 BaseType_t xReturned;
 
-	char cnt = 1;
+	unsigned int cnt = 0;
 
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
@@ -158,13 +158,13 @@ BaseType_t xReturned;
 
 	for( ;; )
 	{
-		printf("%u: Hello from TX\r\n",cnt);
+		printf("[%u]: Hello from TX\r\n",cnt);
 		cnt++;
 		
 		/* Place this task in the blocked state until it is time to run again. */
 		vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_FREQUENCY_MS );
 
-		printf("%u TX: awoken\r\n",cnt);
+		printf("[%u] TX: awoken\r\n",cnt);
 
 		/* Send to the queue - causing the queue receive task to unblock and
 		toggle the LED.  0 is used as the block time so the sending operation
@@ -172,7 +172,7 @@ BaseType_t xReturned;
 		be empty at this point in the code. */
 		xReturned = xQueueSend( xQueue, &ulValueToSend, 0U );
 		configASSERT( xReturned == pdPASS );
-		printf("%u TX: sent\r\n",cnt);
+		printf("[%u] TX: sent\r\n",cnt);
 	}
 }
 /*-----------------------------------------------------------*/
@@ -183,14 +183,14 @@ unsigned long ulReceivedValue;
 const unsigned long ulExpectedValue = 100UL;
 extern void vToggleLED( void );
 
-	char cnt = 1;
+	unsigned int cnt = 0;
 	
 	/* Remove compiler warning about unused parameter. */
 	( void ) pvParameters;
 
 	for( ;; )
 	{
-		printf("%u: Hello from RX\r\n", cnt);
+		printf("[%u]: Hello from RX\r\n", cnt);
 		cnt++;
 
 		/* Wait until something arrives in the queue - this task will block
@@ -198,13 +198,14 @@ extern void vToggleLED( void );
 		FreeRTOSConfig.h. */
 		xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
-		printf("%u RX: received value\r\n",cnt);
+		printf("[%u] RX: received value\r\n",cnt);
 
 		/*  To get here something must have been received from the queue, but
 		is it the expected value?  If it is, toggle the LED. */
 		if( ulReceivedValue == ulExpectedValue )
 		{
 			printf("Blink !!!\r\n");
+			// TODO: blink a real LED at some point
 			vToggleLED();
 			ulReceivedValue = 0U;
 		}
