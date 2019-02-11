@@ -41,12 +41,16 @@ APP_SOURCE_DIR	= ../Common/Minimal
 APP_SRC =  \
 	$(APP_SOURCE_DIR)/AbortDelay.c \
 	$(APP_SOURCE_DIR)/BlockQ.c \
-	$(APP_SOURCE_DIR)/dynamic.c \
 	$(APP_SOURCE_DIR)/blocktim.c \
 	$(APP_SOURCE_DIR)/countsem.c \
+	$(APP_SOURCE_DIR)/death.c \
+	$(APP_SOURCE_DIR)/dynamic.c \
 	$(APP_SOURCE_DIR)/integer.c \
-	$(APP_SOURCE_DIR)/recmutex.c
-		
+	$(APP_SOURCE_DIR)/MessageBufferDemo.c \
+	$(APP_SOURCE_DIR)/PollQ.c \
+	$(APP_SOURCE_DIR)/QPeek.c \
+	$(APP_SOURCE_DIR)/recmutex.c \
+	$(APP_SOURCE_DIR)/semtest.c
 
 PORT_SRC = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/port.c
 PORT_ASM = $(FREERTOS_SOURCE_DIR)/portable/GCC/RISC-V-RV32/portASM.S
